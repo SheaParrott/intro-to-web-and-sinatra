@@ -77,10 +77,12 @@ ActiveRecord::Base.establish_connection(
 class Joke < ActiveRecord::Base
 end
 
+
 # hello world home page
 get '/' do
   json ["hello", "world"]
 end
+
 
 # get one joke useing a differne param method
 # /joke?number=3
@@ -97,6 +99,7 @@ get '/joke' do
   json        joke: JOKES[number]
 end
 
+
 # get all jokes 
 get '/jokes' do
 
@@ -105,6 +108,7 @@ get '/jokes' do
 
   json    jokes: all_jokes
 end
+
 
 #get one joke by 
 get '/jokes/:id' do
@@ -124,7 +128,6 @@ end
 #
 post '/jokes' do
 
-
 # p data
 data = JSON.parse(request.body.read)
 
@@ -138,6 +141,7 @@ new_joke = Joke.create(joke_params)
 json joke: new_joke
 end
 
+
 # updating a joke
 put '/jokes/:id' do
   data = JSON.parse(request.body.read)
@@ -150,6 +154,7 @@ put '/jokes/:id' do
   json joke: existing_joke
 end
 
+
 # delete one joke 
 delete '/jokes/:id' do
 deleting_joke =Joke.find(params["id"])
@@ -158,6 +163,7 @@ deleting_joke.destroy
 
 json joke: deleting_joke
 end
+
 
 #
 # # gavins notes edited to mine above
