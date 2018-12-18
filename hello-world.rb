@@ -64,6 +64,114 @@
 # gavins notes below
 #
 
+# require 'sinatra'
+# require 'sinatra/reloader' if development?
+# require 'sinatra/json'
+# require 'active_record'
+
+# ActiveRecord::Base.establish_connection(
+#   adapter: "postgresql",
+#   database: "jokes"
+# )
+
+# class Joke < ActiveRecord::Base
+# end
+
+
+# # hello world home page
+# get '/' do
+#   json ["hello", "world"]
+# end
+
+
+# # get one joke useing a differne param method
+# # /joke?number=3
+# #
+# get '/joke' do
+#   # params is a variable (secret, it is really a method...)
+#   # that is a hash
+#   #
+#   # I can lookup a parameter and get it's value
+
+#   # Lookup the URL parameter called 'number' and turn this into an integer
+#   number = params["number"].to_i
+
+#   json        joke: JOKES[number]
+# end
+
+
+# # get all jokes 
+# get '/jokes' do
+
+#   # order(:id) orders everything by the id number
+#   all_jokes = Joke.all.order(:id)
+
+#   json    jokes: all_jokes
+# end
+
+
+# #get one joke by 
+# get '/jokes/:id' do
+
+#   joke_from_database = Joke.find(params["id"])
+
+#   json   joke: joke_from_database
+
+#   # json({ joke: JOKES[id] })
+#   #
+#   # More minimal syntax below
+#   #json joke: JOKES[id]
+# end
+
+
+# #creating a joke
+# #
+# post '/jokes' do
+
+# # p data
+# data = JSON.parse(request.body.read)
+
+#   # p params
+#   joke_params = data["joke"]
+
+# # manual create looks like
+# # Joke.create(  punchline: "joke here")
+# new_joke = Joke.create(joke_params)
+
+# json joke: new_joke
+# end
+
+
+# # updating a joke
+# put '/jokes/:id' do
+#   data = JSON.parse(request.body.read)
+#   joke_params = data["joke"]
+
+#   existing_joke = Joke.find(params["id"])
+
+#   existing_joke.update(joke_params)
+
+#   json joke: existing_joke
+# end
+
+
+# # delete one joke 
+# delete '/jokes/:id' do
+# deleting_joke =Joke.find(params["id"])
+
+# deleting_joke.destroy
+
+# json joke: deleting_joke
+# end
+
+
+#
+# # gavins notes edited to mine above
+#
+# gavins notes below
+#
+
+
 require 'sinatra'
 require 'sinatra/reloader' if development?
 require 'sinatra/json'
@@ -78,15 +186,10 @@ class Joke < ActiveRecord::Base
 end
 
 
-# hello world home page
 get '/' do
   json ["hello", "world"]
 end
 
-
-# get one joke useing a differne param method
-# /joke?number=3
-#
 get '/joke' do
   # params is a variable (secret, it is really a method...)
   # that is a hash
@@ -99,20 +202,15 @@ get '/joke' do
   json        joke: JOKES[number]
 end
 
-
-# get all jokes 
+# Get all the jokes
 get '/jokes' do
-
-  # order(:id) orders everything by the id number
   all_jokes = Joke.all.order(:id)
 
-  json    jokes: all_jokes
+  json  all_jokes
 end
 
-
-#get one joke by 
+# Get one joke
 get '/jokes/:id' do
-
   joke_from_database = Joke.find(params["id"])
 
   json   joke: joke_from_database
@@ -123,52 +221,51 @@ get '/jokes/:id' do
   #json joke: JOKES[id]
 end
 
-
-#creating a joke
-#
+# Creating a joke
 post '/jokes' do
+  #
+  # our input body will look like this:
+  #
+  # {
+  #   joke: {
+  #     punchline: "joke here"
+  #   }
+  # }
+  #
 
-# p data
-data = JSON.parse(request.body.read)
+  # Gavin to research this, is there a better way?
+  data = JSON.parse(request.body.read)
 
-  # p params
   joke_params = data["joke"]
 
-# manual create looks like
-# Joke.create(  punchline: "joke here")
-new_joke = Joke.create(joke_params)
+  # Example:
+  #   Joke.create(punchline: "joke here")
+  new_joke = Joke.create(joke_params)
 
-json joke: new_joke
+  json joke: new_joke
 end
 
-
-# updating a joke
+# Updating a joke
 put '/jokes/:id' do
+  # Gavin to research this, is there a better way?
   data = JSON.parse(request.body.read)
+
   joke_params = data["joke"]
 
+  # Find the joke by it's ID
   existing_joke = Joke.find(params["id"])
-
+ 
+  # Update it with the new parameters from joke_params
   existing_joke.update(joke_params)
 
   json joke: existing_joke
 end
 
-
-# delete one joke 
+# Delete a joke
 delete '/jokes/:id' do
-deleting_joke =Joke.find(params["id"])
+  deleting_joke = Joke.find(params["id"])
 
-deleting_joke.destroy
+  deleting_joke.destroy
 
-json joke: deleting_joke
+  json joke: deleting_joke
 end
-
-
-#
-# # gavins notes edited to mine above
-#
-# gavins notes below
-#
-
-
